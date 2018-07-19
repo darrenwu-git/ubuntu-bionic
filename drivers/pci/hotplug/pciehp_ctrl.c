@@ -136,6 +136,9 @@ static void remove_board(struct slot *p_slot)
 	pciehp_green_led_off(p_slot);
 }
 
+static int pciehp_enable_slot(struct slot *slot);
+static int pciehp_disable_slot(struct slot *slot);
+
 void pciehp_request(struct controller *ctrl, int action)
 {
 	atomic_or(action, &ctrl->pending_events);
@@ -322,7 +325,7 @@ static int __pciehp_enable_slot(struct slot *p_slot)
 	return board_added(p_slot);
 }
 
-int pciehp_enable_slot(struct slot *slot)
+static int pciehp_enable_slot(struct slot *slot)
 {
 	struct controller *ctrl = slot->ctrl;
 	int ret;
@@ -356,7 +359,7 @@ static int __pciehp_disable_slot(struct slot *p_slot)
 	return 0;
 }
 
-int pciehp_disable_slot(struct slot *slot)
+static int pciehp_disable_slot(struct slot *slot)
 {
 	int ret;
 
