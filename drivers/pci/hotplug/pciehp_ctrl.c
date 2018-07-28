@@ -229,6 +229,7 @@ void pciehp_handle_disable_request(struct slot *slot)
 	case BLINKINGON_STATE:
 	case BLINKINGOFF_STATE:
 		cancel_delayed_work(&slot->work);
+		break;
 	}
 	slot->state = POWEROFF_STATE;
 	mutex_unlock(&slot->lock);
@@ -249,6 +250,7 @@ void pciehp_handle_presence_or_link_change(struct slot *slot, u32 events)
 	switch (slot->state) {
 	case BLINKINGOFF_STATE:
 		cancel_delayed_work(&slot->work);
+		/* fall through */
 	case ON_STATE:
 		slot->state = POWEROFF_STATE;
 		mutex_unlock(&slot->lock);
@@ -262,6 +264,7 @@ void pciehp_handle_presence_or_link_change(struct slot *slot, u32 events)
 		break;
 	default:
 		mutex_unlock(&slot->lock);
+		break;
 	}
 
 	/* Turn the slot on if it's occupied or link is up */
@@ -276,6 +279,7 @@ void pciehp_handle_presence_or_link_change(struct slot *slot, u32 events)
 	switch (slot->state) {
 	case BLINKINGON_STATE:
 		cancel_delayed_work(&slot->work);
+		/* fall through */
 	case OFF_STATE:
 		slot->state = POWERON_STATE;
 		mutex_unlock(&slot->lock);
@@ -289,6 +293,7 @@ void pciehp_handle_presence_or_link_change(struct slot *slot, u32 events)
 		break;
 	default:
 		mutex_unlock(&slot->lock);
+		break;
 	}
 }
 
